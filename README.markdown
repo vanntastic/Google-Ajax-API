@@ -1,7 +1,7 @@
 Google AJAX API
 ===============
 
-Now you no longer have to manually download frameworks and manually wire them into your app this super duper simple rails plugin allows you to load js frameworks from google. You can view the list of available frameworks to use here:
+Now you no longer have to manually download frameworks and manually wire them into your app, this super duper simple rails plugin allows you to load js frameworks from google. You can view the list of available frameworks to use here:
 
       http://code.google.com/apis/ajaxlibs/documentation/
     
