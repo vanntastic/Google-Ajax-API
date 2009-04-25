@@ -1,3 +1,3 @@
 require 'google_ajax_api'
 
-ActionView::Base.send :include, GoogleAjaxApi
+ActionView::Base.send :include, Google::AjaxApi
