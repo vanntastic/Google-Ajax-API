@@ -32,5 +32,21 @@ YOU CAN ALSO LOAD MULTIPLE FRAMEWORKS
     LOAD JQUERY 1.3.2 AND JQUERY UI 1.7.1
     
       <%= include_js 'jquery-1.3.2', 'jqueryui-1.7.1' %>
+      
+WHAT IF YOU'RE NOT ONLINE?
+
+    First, run the rake task for the library that you want to access offline:
+    
+      rake gajax:install LIB=jquery-1.3.2 # LIB=library_name-version.number
+
+    Then just pass the :cached option to the end of your array:
+      
+      <%= include_js 'jquery-1.3.2', :cached %>
+      <%= include_js 'jquery-1.3.2', 'jqueryui-1.7.1', :cached %>
+    
+    It's smart enough to know whether or not you're in production, so it knows what to use at the right time.
+    
+    NOTE: The cached option doesn't work with YUI, Ext Core, or Chrome Frame, you'll have to manually download them
+    yourself and move the in the javascripts library.
 
 Copyright (c) 2009 Vann Ek, released under the MIT license
