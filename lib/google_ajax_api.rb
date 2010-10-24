@@ -48,7 +48,8 @@ module Google
       content << gloader
       content << "</script>"
       
-      (Rails.env == "development" && cached) ? js_files : content
+      env = Rails.respond_to?(:env) ? Rails.env : RAILS_ENV
+      (env == "development" && cached) ? js_files : content
     end
     
   end
