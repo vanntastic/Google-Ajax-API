@@ -1,5 +1,6 @@
 BASE = "http://ajax.googleapis.com/ajax/libs/"
-JSDIR = File.join(Rails.root, "public/javascripts")
+ROOT_DIR = Rails.respond_to?(:root) ? Rails.root : RAILS_ROOT
+JSDIR = File.join(ROOT_DIR, "public/javascripts")
 
 namespace :gajax do
   
