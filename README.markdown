@@ -37,7 +37,10 @@ WHAT IF YOU'RE NOT ONLINE?
 
     First, run the rake task for the library that you want to access offline:
     
-      rake gajax:install LIB=jquery-1.3.2 # LIB=library_name-version.number
+      rake gajax:install[jquery-1.3.2] # Format: library_name-version.number
+
+      or, if your library and filename doesn't match
+      rake gajax:install[scriptaculous-1.8.10,effects] # 'effects' is the js filename
 
     Then just pass the :cached option to the end of your array:
       

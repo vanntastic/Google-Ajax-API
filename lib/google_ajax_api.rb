@@ -20,7 +20,7 @@ module Google
     #
     # First run:
     #
-    #   rake gajax:install LIB=jquery-1.3.2
+    #   rake gajax:install[jquery-1.3.2]
     #   include_js 'jquery-1.3.2', :cached
     #   include_js 'jquery-1.3.2','jqueryui-1.7.1', :cached
     #
@@ -32,8 +32,20 @@ module Google
       js_urls_or_filenames(*frameworks).map { |key| javascript_include_tag(key) }
     end
 
-    def js_url_or_filename(framework, version, filename=framework, _skip_cache=true, options={})
-      _skip_cache ? "#{BASE_URL}#{framework}/#{version}/#{filename}#{extension(options)}" : filename
+    def js_url_or_filename(framework, version, filename=nil, _skip_cache=true, options={})
+      filename = framework_lib_to_filename(framework) unless filename
+      _skip_cache ? "#{BASE_URL}#{framework}/#{version}/#{filename}#{extension(options)}" : versioned_path(framework, version, filename, options)
+    end
+
+    def versioned_dir(framework, version, options={})
+      prefix = options[:prefix] || "/javascripts"
+      "#{prefix}/#{framework}/#{version}"
+    end
+
+    def versioned_path(framework, version, filename=nil, options={})
+      extension = options[:extension] || ".js"
+      filename = framework_lib_to_filename(framework) unless filename
+      "#{versioned_dir(framework, version, options)}/#{filename}#{extension}"
     end
 
     def js_urls_or_filenames(*frameworks)
@@ -45,10 +57,13 @@ module Google
 
         # make an exception for ext-core and chrome-frame
         fw = "#{framework.split('-').first}-#{framework.split('-')[1]}" if EXCEPTIONS.include?(framework.split("-").first)
-        fw_filename = fw == "jqueryui" ? "jquery-ui" : fw
 
-        js_url_or_filename(fw, version, fw_filename, _skip_cache, options)
+        js_url_or_filename(fw, version, nil, _skip_cache, options)
       end
+    end
+
+    def framework_lib_to_filename(framework_name)
+      framework_name == "jqueryui" ? "jquery-ui" : framework_name
     end
 
     def skip_gajax_cache?(options={})
