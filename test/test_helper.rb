@@ -1,3 +1,3 @@
 require 'rubygems'
-require 'active_support'
-require 'active_support/test_case'
+Dir.glob("#{File.dirname(__FILE__) + '/../lib'}/*.rb").each {|f| require(f)}
+require 'test/unit'
