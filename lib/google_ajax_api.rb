@@ -34,6 +34,7 @@ module Google
 
     def cached_url_or_filename(framework, version, options={})
       filename = options[:filename] || framework_lib_to_filename(framework)
+      options[:cached] = true
       _skip_cache = options.has_key?(:skip_cache) ? options[:skip_cache] : skip_gajax_cache?(options)
       js_url_or_filename framework, version, filename, _skip_cache, options
     end
@@ -68,7 +69,8 @@ module Google
     end
 
     def skip_gajax_cache?(options={})
-      production?(options) || !options[:cached]
+      return true if production?(options)
+      !options[:cached]
     end
 
     def js_url_or_filename(framework, version, filename=nil, _skip_cache=true, options={})

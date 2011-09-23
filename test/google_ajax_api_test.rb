@@ -3,6 +3,38 @@ require 'test_helper'
 class Google::AjaxApiTest < Test::Unit::TestCase
   include Google::AjaxApi
 
+  unless Object.const_defined? "Rails"
+    class ::Rails; def self.env=(val); @env=val; end; def self.env; @env; end; end
+  end
+
+  def test_jquery_cached_minified_rails_dev
+    fw, version, fw_filename, ext = 'jquery', '1.3.2', 'jquery', '.js'
+    expected_env = :development
+    expected = "/javascripts/#{fw}/#{version}/#{fw_filename}#{ext}"
+    got = nil
+    Rails.env=(expected_env) if Rails.respond_to?(:env=)
+    if Rails.env == expected_env
+      got = cached_url_or_filename('jquery', '1.3.2', {:minified => true})
+    else
+      got = cached_url_or_filename('jquery', '1.3.2', {:env => expected_env, :minified => true})
+    end
+    assert got == expected
+  end
+
+  def test_jquery_cached_minified_rails_prod
+    expected_env = :production
+    fw, version, fw_filename, ext = 'jquery', '1.3.2', 'jquery', '.min.js'
+    expected = "#{BASE_URL}#{fw}/#{version}/#{fw_filename}#{ext}"
+    got = nil
+    Rails.env=(expected_env) if Rails.respond_to?(:env=)
+    if Rails.env == expected_env
+      got = cached_url_or_filename('jquery', '1.3.2', {:minified => true})
+    else
+      got = cached_url_or_filename('jquery', '1.3.2', {:env => expected_env, :minified => true})
+    end
+    assert got == expected
+  end
+
   def test_scriptaculous_urls
     fw = 'scriptaculous'
     version = '1.8.2'
