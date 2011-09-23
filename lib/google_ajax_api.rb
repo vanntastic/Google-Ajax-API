@@ -32,9 +32,10 @@ module Google
       js_urls_or_filenames(*frameworks).map { |key| javascript_include_tag(key) }
     end
 
-    def js_url_or_filename(framework, version, filename=nil, _skip_cache=true, options={})
-      filename = framework_lib_to_filename(framework) unless filename
-      _skip_cache ? "#{BASE_URL}#{framework}/#{version}/#{filename}#{extension(options)}" : versioned_path(framework, version, filename, options)
+    def cached_url_or_filename(framework, version, options={})
+      filename = options[:filename] || framework_lib_to_filename(framework)
+      _skip_cache = options.has_key?(:skip_cache) ? options[:skip_cache] : skip_gajax_cache?(options)
+      js_url_or_filename framework, version, filename, _skip_cache, options
     end
 
     def versioned_dir(framework, version, options={})
@@ -70,6 +71,11 @@ module Google
       production?(options) || !options[:cached]
     end
 
+    def js_url_or_filename(framework, version, filename=nil, _skip_cache=true, options={})
+      filename = framework_lib_to_filename(framework) unless filename
+      _skip_cache ? "#{BASE_URL}#{framework}/#{version}/#{filename}#{extension(options)}" : versioned_path(framework, version, filename, options)
+    end
+
     private
 
     def production?(options={})
@@ -80,10 +86,10 @@ module Google
      Rails.respond_to?(:env) ? Rails.env : RAILS_ENV
     end
 
-    def extract_flags! flags, frameworks
-      while VALID_FLAGS.include?(frameworks.last)
-        flag, value = flag_value(frameworks.pop)
-        flags[flag] = value
+    def extract_flags! options, flags
+      while VALID_FLAGS.include?(flags.last)
+        flag, value = flag_value(flags.pop)
+        options[flag] = value
       end
     end
 

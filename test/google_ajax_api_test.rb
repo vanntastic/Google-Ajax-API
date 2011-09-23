@@ -7,22 +7,21 @@ class Google::AjaxApiTest < Test::Unit::TestCase
     fw = 'scriptaculous'
     version = '1.8.2'
     fw_filename = 'effects'
-    options = {:cached => true, :env => :production}
-    _skip_cache = skip_gajax_cache?(options)
     ext = ".js"
 
     expected = "#{BASE_URL}#{fw}/#{version}/#{fw_filename}#{ext}"
-    got = js_url_or_filename(fw, version, fw_filename, _skip_cache)
+    got = cached_url_or_filename(fw, version, {:filename => fw_filename, :env => :production})
+
     assert got == expected
 
     fw_filename = 'dragdrop'
     expected = "#{BASE_URL}#{fw}/#{version}/#{fw_filename}#{ext}"
-    got = js_url_or_filename(fw, version, fw_filename, _skip_cache)
+    got = cached_url_or_filename(fw, version, {:filename => fw_filename, :env => :production})
     assert got == expected
 
     fw_filename = 'controls'
     expected = "#{BASE_URL}#{fw}/#{version}/#{fw_filename}#{ext}"
-    got = js_url_or_filename(fw, version, fw_filename, _skip_cache)
+    got = cached_url_or_filename(fw, version, {:filename => fw_filename, :env => :production})
     assert got == expected
   end
 
@@ -101,7 +100,7 @@ class Google::AjaxApiTest < Test::Unit::TestCase
     got = js_urls_or_filenames('jquery-1.3.2', :cached, :minified, :production_env)
     assert got == expected
 
-    got = js_url_or_filename('jquery', '1.3.2', 'jquery', true, :minified => true)
+    got = cached_url_or_filename('jquery', '1.3.2', {:filename => 'jquery', :skip_cache => true, :minified => true})
     assert got == expected.first
   end
 
